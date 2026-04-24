@@ -1,0 +1,25 @@
+bot:
+  token: ""
+  cache_path: "cache/bot/"
+  messages_path: "configs/messages.yaml"
+  users_path: "configs/users.yaml"
+  promt_for_db_path: "data/llm/promt_for_db.md"
+  promt_for_answer_path: "data/llm/promt_for_answer.md"
+  promt_for_db_script_path: "data/database/script.sql"
+  max_iterations: 3
+
+database:
+  path: "data/database/finance.db"
+  init_script: "data/database/script.sql"
+
+vosk:
+  model_path: "data/voice_model/small"
+
+ffmpeg:
+  check: true
+
+openrouter:
+  base_url: "https://openrouter.ai/api/v1/chat/completions"
+  api_key: ""
+  model: "inclusionai/ling-2.6-1t:free"
+  timeout: 5
