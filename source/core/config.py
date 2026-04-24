@@ -6,13 +6,21 @@ logger = logging.getLogger(__name__)
 
 
 class Config:
-    """Загружает конфигурацию из YAML и предоставляет доступ как к словарю."""
+    """
+    Класс для работы с конфигурацией.
+
+    Загружает YAML файл и предоставляет доступ к параметрам
+    через точечную нотацию (например: 'bot.token').
+    """
     def __init__(self, config_path):
         self.config_path = config_path
         self._data = {}
         self.load()
 
     def load(self):
+        """
+       Загружает конфигурацию из файла.
+       """
         try:
             with open(self.config_path, 'r', encoding='utf-8') as f:
                 self._data = yaml.safe_load(f)
@@ -22,7 +30,13 @@ class Config:
             self._data = {}
 
     def get(self, key, default=None):
-        """Получить значение по точечной нотации (например, 'bot.token')."""
+        """
+        Получает значение по ключу.
+
+        :param key: строка с точечной нотацией
+        :param default: значение по умолчанию
+        :return: значение или default
+        """
         keys = key.split('.')
         value = self._data
         for k in keys:

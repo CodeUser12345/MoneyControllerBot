@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class VoiceRecognizer:
+    """
+    Класс для распознавания речи с помощью Vosk.
+    """
     def __init__(self, config: Config):
         self.model_path = config.get('vosk.model_path')
         self.model = None
@@ -24,8 +27,10 @@ class VoiceRecognizer:
 
     def recognize(self, wav_path: str) -> str:
         """
-        Распознаёт речь из WAV-файла (моно, 16 кГц, 16 бит).
-        Возвращает распознанный текст или пустую строку.
+        Распознаёт речь из WAV-файла.
+
+        :param wav_path: путь к файлу
+        :return: текст
         """
         if not self.model:
             logger.error(f"Модель не загружена")

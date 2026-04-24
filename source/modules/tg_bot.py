@@ -16,7 +16,23 @@ logger = logging.getLogger(__name__)
 
 
 class TgBot:
+    """
+        Основной класс Telegram-бота.
+
+        Отвечает за:
+        - обработку сообщений
+        - взаимодействие с LLM
+        - выполнение действий
+        """
     def __init__(self, config: Config, voice_recognizer, llm_model, dispatcher):
+        """
+        Инициализация Telegram-бота.
+
+        :param config: объект конфигурации
+        :param voice_recognizer: модуль распознавания голоса
+        :param llm_model: модуль LLM
+        :param dispatcher: диспетчер действий
+        """
         self.voice_recognizer = voice_recognizer
         self.llm_model = llm_model
         self.dispatcher = dispatcher
@@ -32,9 +48,18 @@ class TgBot:
         self._register_handlers()
 
     def send_message(self, message, text):
+        """
+        Отправляет сообщение пользователю.
+
+        :param message: объект Telegram сообщения
+        :param text: текст ответа
+        """
         self.bot.reply_to(message, text, parse_mode='Markdown')
 
     def _check_user(self, message):
+        """
+        Проверяет, есть ли у пользователя доступ к боту.
+        """
         user_id = message.from_user.id
         if not self.dispatcher.db.is_user_allowed(user_id):
             self.send_message(message, self.messages.get("error_access_1") + self.messages.get("error_access_2") +
@@ -44,6 +69,9 @@ class TgBot:
         return True
 
     def _load_promt(self, paths):
+        """
+        Загружает текст промтов из файлов.
+        """
         text = ""
         for path in paths:
             with open(path, "r", encoding="utf-8") as file:
@@ -51,6 +79,11 @@ class TgBot:
         return text
 
     def _build_user_message(self, original_text: str, iteration: int, history: list[dict], input_kind: str) -> str:
+        """
+        Формирует сообщение для LLM с учётом истории.
+
+        :return: строка запроса для модели
+        """
         time_now = datetime.now()
         formatted_time_now = time_now.strftime("%Y-%m-%d %H:%M:%S")
         parts = [
@@ -72,6 +105,14 @@ class TgBot:
         return "\n".join(parts)
 
     def _generate_answer(self, message, text, input_kind="text"):
+        """
+            Генерирует ответ пользователю через LLM.
+
+            :param message: объект сообщения Telegram
+            :param text: текст запроса
+            :param input_kind: тип входных данных (text, voice, qr)
+            :return: None
+            """
         db_history = []
 
         try:
@@ -109,6 +150,9 @@ class TgBot:
             self.send_message(message, self.messages.get("error_message"))
 
     def _register_handlers(self):
+        """
+        Регистрирует обработчики сообщений Telegram.
+        """
         @self.bot.message_handler(commands=['start', 'help'])
         def send_welcome(message):
             if not self._check_user(message):
@@ -180,7 +224,11 @@ class TgBot:
                 self.send_message(message, self.messages.get("error_message"))
 
     def _process_voice(self, message):
-        """Обработка голосового сообщения."""
+        """
+        Обрабатывает изображение и пытается извлечь QR-код.
+
+        :return: (текст, тип входа)
+        """
         # Проверка ffmpeg
         ffmpeg_available = self._check_ffmpeg()
         if not ffmpeg_available:

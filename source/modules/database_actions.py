@@ -9,6 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseActions:
+    """
+    Класс бизнес-логики работы с транзакциями и категориями.
+
+    Использует DatabaseManager для выполнения SQL.
+    """
     def __init__(self, config: Config, db_manager: DatabaseManager):
         self.config = config
         self.db = db_manager
@@ -276,6 +281,9 @@ class DatabaseActions:
     # ========== ТРАНЗАКЦИИ ==========
 
     def add_transaction(self, telegram_id: int, params: Dict[str, Any]) -> Dict:
+        """
+        Добавляет новую транзакцию.
+        """
         user_id = self._get_user_id(telegram_id)
 
         amount = self._pick_param(params, "amount")
@@ -315,6 +323,9 @@ class DatabaseActions:
         }
 
     def get_transactions(self, telegram_id: int, params: Dict[str, Any]) -> List[Dict]:
+        """
+        Возвращает список транзакций с фильтрацией.
+        """
         user_id = self._get_user_id(telegram_id)
 
         query = """
@@ -439,6 +450,9 @@ class DatabaseActions:
         }
 
     def delete_transaction(self, telegram_id: int, params: Dict[str, Any]) -> Dict:
+        """
+        Удаляет транзакцию(и).
+        """
         user_id = self._get_user_id(telegram_id)
 
         transaction_id = self._pick_param(params, "transaction_id", "id")

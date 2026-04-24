@@ -7,6 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class LLMModel:
+    """
+    Класс для работы с LLM через API (OpenRouter).
+    """
     def __init__(self, config: Config):
         self.api_key = config.get('openrouter.api_key')
         if not self.api_key:
@@ -22,7 +25,11 @@ class LLMModel:
 
     def query(self, user_message: str, system_message: str = "You are a helpful assistant.") -> str:
         """
-        Отправляет сообщение пользователя в модель и возвращает ответ.
+        Отправляет запрос в LLM и возвращает ответ.
+
+        :param user_message: сообщение пользователя
+        :param system_message: системный промт
+        :return: текст ответа модели
         """
         payload = {
             "model": self.model,

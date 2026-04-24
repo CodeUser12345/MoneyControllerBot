@@ -12,7 +12,20 @@ logger = logging.getLogger(__name__)
 
 
 class Application:
+    """
+    Главный класс приложения.
+
+    Отвечает за:
+    - загрузку конфигурации
+    - инициализацию всех модулей
+    - запуск Telegram-бота
+    """
     def __init__(self, config_path: str):
+        """
+        Инициализирует приложение.
+
+        :param config_path: путь к YAML конфигурации
+        """
         self.config = Config(config_path)
         self.voice_recognizer = None
         self.llm_model = None
@@ -23,7 +36,14 @@ class Application:
         self._init_modules()
 
     def _init_modules(self):
-        """Инициализация модулей с передачей конфигурации."""
+        """
+        Инициализирует все основные модули системы:
+        - распознавание голоса
+        - LLM модель
+        - база данных
+        - dispatcher
+        - Telegram-бот
+        """
         # Инициализация распознавателя голоса
         self.voice_recognizer = VoiceRecognizer(self.config)
 

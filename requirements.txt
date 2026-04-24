@@ -7,3 +7,4 @@ requests==2.32.5
 pillow==12.2.0
 pyzbar==0.1.9
 opencv-python==4.13.0.92
+sphinx==9.1.0

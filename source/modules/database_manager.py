@@ -54,8 +54,11 @@ class DatabaseManager:
     def execute(self, query: str, params: tuple = (), fetch: bool = False):
         """
         Выполняет SQL-запрос.
-        Если fetch=True — возвращает список словарей.
-        Если fetch=False — возвращает lastrowid для INSERT, иначе None.
+
+        :param query: SQL строка
+        :param params: параметры запроса
+        :param fetch: возвращать ли результат
+        :return: результат запроса
         """
         with self._get_connection() as conn:
             cursor = conn.cursor()

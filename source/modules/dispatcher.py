@@ -7,10 +7,20 @@ from source.modules.database_actions import DatabaseActions
 logger = logging.getLogger(__name__)
 
 class ActionDispatcher:
+    """
+    Диспетчер действий.
+
+    Получает список действий от LLM и вызывает соответствующие методы DatabaseActions.
+    """
     def __init__(self, config: Config, db_actions: DatabaseActions):
         self.db = db_actions
 
     def execute_actions(self, actions: List[Dict[str, Any]], telegram_id: int) -> List[Dict[str, Any]]:
+        """
+        Выполняет список действий.
+
+        :return: список результатов
+        """
         results = []
         for action in actions:
             action_type = action.get("type")
