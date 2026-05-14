@@ -89,9 +89,20 @@ bot:
   token: YOUR_TELEGRAM_TOKEN
 ```
 
+### OpenRouter
+
+```yaml
+openrouter:
+  api_key: YOUR_API_KEY
+  model: YOUR_MODEL
+```
 ---
 
 ## Запуск бота
+
+```
+Включить vpn c tun
+```
 
 ```bash
 python main.py

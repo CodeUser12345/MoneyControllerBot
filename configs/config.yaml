@@ -21,5 +21,5 @@ ffmpeg:
 openrouter:
   base_url: "https://openrouter.ai/api/v1/chat/completions"
   api_key: ""
-  model: "inclusionai/ling-2.6-1t:free"
+  model: "poolside/laguna-m.1:free"
   timeout: 5

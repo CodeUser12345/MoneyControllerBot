@@ -104,6 +104,31 @@ class TgBot:
                 )
         return "\n".join(parts)
 
+    def _parse_db_response(self, db_response: str) -> dict:
+        text = (db_response or "").strip()
+
+        if text.startswith("```"):
+            lines = text.splitlines()
+
+            if lines and lines[0].strip().startswith("```"):
+                lines = lines[1:]
+
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+
+            text = "\n".join(lines).strip()
+
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            start = text.find("{")
+            end = text.rfind("}")
+
+            if start != -1 and end != -1 and start < end:
+                return json.loads(text[start:end + 1])
+
+            raise
+
     def _generate_answer(self, message, text, input_kind="text"):
         """
             Генерирует ответ пользователю через LLM.
@@ -123,7 +148,7 @@ class TgBot:
                 logger.info(f"ID: {message.from_user.id}. DB-итерация {iteration}, ответ: {db_response}")
 
                 try:
-                    data = json.loads(db_response)
+                    data = self._parse_db_response(db_response)
                 except json.JSONDecodeError:
                     logger.error(f"ID: {message.from_user.id}. DB-ответ не JSON: {db_response}")
                     self.send_message(message, self.messages.get("error_parse_message"))
@@ -277,7 +302,7 @@ class TgBot:
             return text
 
         except Exception as error:
-            self.send_message(message, self.messages.get("error_voice") + error)
+            self.send_message(message, self.messages.get("error_voice") + str(error))
             logger.exception(error)
 
     def _check_ffmpeg(self):

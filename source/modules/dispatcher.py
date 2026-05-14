@@ -28,6 +28,11 @@ class ActionDispatcher:
             method = getattr(self.db, action_type, None)
             if method is None:
                 logger.error(f"Неизвестное действие: {action_type}")
+                results.append({
+                    "action": action_type,
+                    "error": f"unknown_action: {action_type}"
+                })
+                continue
             result = method(telegram_id, params)
             results.append({"action": action_type, "result": result})
         return results
